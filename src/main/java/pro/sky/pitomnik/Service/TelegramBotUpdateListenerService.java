@@ -1,58 +1,51 @@
 package pro.sky.pitomnik.Service;
 
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SetMyCommands;
+import com.pengrad.telegrambot.response.SendResponse;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.model.botcommandscope.BotCommandScope;
+import com.pengrad.telegrambot.model.botcommandscope.BotCommandScopeDefault;
 
-import pro.sky.pitomnik.Model.BooleansData;
-import pro.sky.pitomnik.Model.User;
-import pro.sky.pitomnik.Repository.*;
-import pro.sky.pitomnik.helpers.MenuItems;
-import pro.sky.pitomnik.helpers.SubItemsOfOneBaseItems;
-import pro.sky.pitomnik.helpers.SubItemsOfThreeItems;
-import pro.sky.pitomnik.helpers.SubItemsOfTwoBaseItems;
-import pro.sky.pitomnik.helpers.SubMenuItems;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import pro.sky.pitomnik.Interface.MenuForUser;
+import pro.sky.pitomnik.SubMenu.InfoAboutPitomnik;
 
 @Service
-public class TelegramBotUpdateListenerService implements UpdatesListener {
+public class TelegramBotUpdateListenerService implements UpdatesListener, MenuForUser {
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListenerService.class);
     
     private TelegramBot telegramBot;
-    private NewUserConsultationRepository newUserConsultationRepository;
-    private PictureRepository pictureRepository;
-    private SubItemsOfOneBaseItems subItemsOfOneBaseItems;
-    private SubItemsOfTwoBaseItems subItemsOfTwoBaseItems;
-    private SubItemsOfThreeItems subItemsOfThreeItems;
-    private BooleansData booleansData;
-    private Boolean isShowMenu = false;
-
-    public TelegramBotUpdateListenerService(TelegramBot telegramBot,
-    NewUserConsultationRepository newUserConsultationRepository,
-    PictureRepository pictureRepository,
-    SubItemsOfOneBaseItems subItemsOfOneBaseItems,
-    SubItemsOfTwoBaseItems subItemsOfTwoBaseItems,
-    SubItemsOfThreeItems subItemsOfThreeItems,
-    BooleansData booleansData) { 
-        this.telegramBot = telegramBot;
-        this.newUserConsultationRepository = newUserConsultationRepository;
-        this.pictureRepository = pictureRepository;
-        this.subItemsOfOneBaseItems = subItemsOfOneBaseItems;
-        this.subItemsOfTwoBaseItems = subItemsOfTwoBaseItems;
-        this.subItemsOfThreeItems = subItemsOfThreeItems;
-        this.booleansData = booleansData;
-       
+    private InfoAboutPitomnik infoAboutPitomnik;
+    private SubMenuItemsService subMenuItemsService;
+    private boolean isCheckOfCommandStart = false;
+    
+    public TelegramBotUpdateListenerService(TelegramBot telegramBot, 
+    InfoAboutPitomnik infoAboutPitomnik,
+    SubMenuItemsService subMenuItemsService) { 
+        this.telegramBot = telegramBot;   
+        this.infoAboutPitomnik = infoAboutPitomnik;
+        this.subMenuItemsService = subMenuItemsService;
     }
    
     @PostConstruct
@@ -60,71 +53,64 @@ public class TelegramBotUpdateListenerService implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-    private void checkQueryOfUser(String response, Long chatId) {
 
-        String responses = response;
-        SendMessage message;
-        message = new SendMessage(chatId, responses);
-        telegramBot.execute(message);
-    
-}
+    public TelegramBot getTelegramBot() {
+        return telegramBot;
+    }
+
+   
+
+    @Override
+    public String menu() {
+        Map<String, String> menuItems = new TreeMap<>(
+            Map.of(
+            "1", "Узнать информацию о приюте",
+            "2", "Как взять собаку из приюта",
+            "3", "Прислать отчет о питомце",
+            "4", "Позвать волонтера"
+        )
+        );
+       StringBuilder stringBuilder = new StringBuilder();
+       menuItems.forEach((k,v) -> {
+          stringBuilder.append(k.trim() + "." + " " + v + "\n");
+       });
+        return stringBuilder.toString();
+    }
+
+    private void sendMessageToTelegramBot(Update update, String welcomeUserMessage, String menu) {
+        long chatId = update.message().chat().id();
+        String result = welcomeUserMessage + "\n" + menu;
+        telegramBot.execute(new SendMessage(chatId, result)); 
+    }
     
     @Override
     public int process(List<Update> updates) {
-        
-       
-
         updates.forEach(update -> {
-            String response;
-            SendMessage message = new SendMessage("", "");
-            Long chatId = update.message().chat().id();
-            telegramBot.execute(message);
+            // base menu
+            if(update.message().text().equals("/start")) {
+                isCheckOfCommandStart = true;
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь выбрать для себя нужную опцию и получить актуалную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1base, /2base и т.д.", menu() );
+            } else if(update.message().text().equals("/1base")) {
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
+            } else if(update.message().text().equals("/2base")) {
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
+            } else if(update.message().text().equals("/3base")) {
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
+            } else if(update.message().text().equals("/4base")) {
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
+            } 
+            // else {
+            //     long chatId = update.message().chat().id();
+            //     SendMessage sendMessage = new SendMessage(chatId, "начните с команды /start");
+            //     telegramBot.execute(sendMessage);
+            // }
+            // submenu
+            subMenuItemsService.subMenuOfAboutPitomnik(update);
 
-        // основное меню    
-        if (update.message().text().contains("/start")) {
+        });
         
-           checkQueryOfUser(MenuItems.menu(), chatId);
-           isShowMenu = true;
-        } else if(update.message().text().contains("1base") && isShowMenu == true) {
-            checkQueryOfUser(SubMenuItems.subMenu(SubMenuItems.subMenuMapOneBase), chatId); 
-            booleansData.setOneBase(true);           
-        } else if(update.message().text().contains("2base") && isShowMenu == true) {
-            checkQueryOfUser(SubMenuItems.subMenu(SubMenuItems.subMenuMapTwoBase), chatId); 
-            booleansData.setTwoSubOfTwoBase(true);     
-        } else if(update.message().text().contains("3base") && isShowMenu == true) {
-            checkQueryOfUser(SubMenuItems.subMenu(SubMenuItems.subMenuMapThreeBase), chatId); 
-            booleansData.setThreeSubOfThreeBase(true);     
-        } 
-        else if(update.message().text().contains("4base") && isShowMenu == true) {
-            chatId = update.message().chat().id();
-            message = new SendMessage(chatId, "Волонтер тебя приглашают на помощь");
-            telegramBot.execute(message);
-        }
-
-            
-
-        // подменю 
-        Boolean isOneBase = booleansData.getOneBase();
-        Boolean isTwoSubOfTwoBase = booleansData.getTwoSubOfTwoBase();
-        Boolean isThreeOfThreeBase = booleansData.getThreeSubOfThreeBase();
-         if(isOneBase == true) {
-            subItemsOfOneBaseItems.subOfOneBase(update); 
-            }  else if(isTwoSubOfTwoBase == true) {
-                subItemsOfTwoBaseItems.subOfTwoBase(update); 
-            } else if (isThreeOfThreeBase == true) {
-                subItemsOfThreeItems.subOfOneBase(update);
-            }
-
-            //  subItemsOfTwoBaseItems.subOfOneBase(update);
-    
-        // } else if(update.message().text().contains("4sub") && isShowMenu == true) {
-            
-        // }     
-
-    });
 
     return UpdatesListener.CONFIRMED_UPDATES_ALL;
     
 }
-
 }
