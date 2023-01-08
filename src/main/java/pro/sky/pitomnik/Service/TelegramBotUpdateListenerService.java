@@ -1,51 +1,66 @@
 package pro.sky.pitomnik.Service;
 
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.io.IOException;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
 import java.util.TreeMap;
-import java.util.Map.Entry;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.request.SetMyCommands;
-import com.pengrad.telegrambot.response.SendResponse;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.User;
-import com.pengrad.telegrambot.model.botcommandscope.BotCommandScope;
-import com.pengrad.telegrambot.model.botcommandscope.BotCommandScopeDefault;
 
-import jakarta.annotation.PostConstruct;
 import pro.sky.pitomnik.Interface.MenuForUser;
-import pro.sky.pitomnik.SubMenu.InfoAboutPitomnik;
+import pro.sky.pitomnik.Model.UserPitomnik;
+import pro.sky.pitomnik.Repository.UserPitomnikRepository;
+import pro.sky.pitomnik.SubMenu.InfoAboutPitomnikMenu;
+import pro.sky.pitomnik.SubMenu.KeepengPet;
+import pro.sky.pitomnik.SubMenu.UserConsultationMenu;
 
 @Service
 public class TelegramBotUpdateListenerService implements UpdatesListener, MenuForUser {
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListenerService.class);
     
     private TelegramBot telegramBot;
-    private InfoAboutPitomnik infoAboutPitomnik;
-    private SubMenuItemsService subMenuItemsService;
+    private InfoAboutPitomnikMenu infoAboutPitomnikMenu;
+    private SubMenuOfAboutPitomnik subMenuOfAboutPitomnik;
+    private UserConsultationMenu userConsultationMenu;
+    private SubMenuOfUserConsultation subMenuOfUserConsultation;
+    private SubMenuKeepingPet subMenuKeepingPet;
+    private KeepengPet keepengPet;
+    private UserPitomnikRepository userPitomnikRepository;
     private boolean isCheckOfCommandStart = false;
+    private boolean isCheck1Base = false;
+    private boolean isCheck2Base = false;
+    private boolean isCheck3Base = false;
+    private boolean isCheck4Base = false;
+
     
     public TelegramBotUpdateListenerService(TelegramBot telegramBot, 
-    InfoAboutPitomnik infoAboutPitomnik,
-    SubMenuItemsService subMenuItemsService) { 
+    InfoAboutPitomnikMenu infoAboutPitomnikMenu,
+    SubMenuOfAboutPitomnik subMenuOfAboutPitomnik,
+    UserConsultationMenu userConsultationMenu,
+    SubMenuOfUserConsultation subMenuOfUserConsultation,
+    SubMenuKeepingPet subMenuKeepingPet,
+    KeepengPet keepengPet,
+    UserPitomnikRepository userPitomnikRepository) { 
         this.telegramBot = telegramBot;   
-        this.infoAboutPitomnik = infoAboutPitomnik;
-        this.subMenuItemsService = subMenuItemsService;
+        this.infoAboutPitomnikMenu = infoAboutPitomnikMenu;
+        this.subMenuOfAboutPitomnik = subMenuOfAboutPitomnik;
+        this.userConsultationMenu = userConsultationMenu;
+        this.subMenuOfUserConsultation = subMenuOfUserConsultation;
+        this.subMenuKeepingPet = subMenuKeepingPet;
+        this.keepengPet = keepengPet;
+        this.userPitomnikRepository = userPitomnikRepository;
+        
     }
    
     @PostConstruct
@@ -87,30 +102,63 @@ public class TelegramBotUpdateListenerService implements UpdatesListener, MenuFo
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             // base menu
-            if(update.message().text().equals("/start")) {
+            if(update.message().text() != null && update.message().text().equals("/start")) {
                 isCheckOfCommandStart = true;
-                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь выбрать для себя нужную опцию и получить актуалную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1base, /2base и т.д.", menu() );
-            } else if(update.message().text().equals("/1base")) {
-                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
-            } else if(update.message().text().equals("/2base")) {
-                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
-            } else if(update.message().text().equals("/3base")) {
-                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
-            } else if(update.message().text().equals("/4base")) {
-                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя нужную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnik.menu());
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь выбрать для себя нужную опцию и получить актуалную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1base, /2base и т.д. Для отмены и возврата в основное меню пришли /start", menu() );
+            //    сброс состояния 
+                isCheck1Base = false;
+                isCheck2Base = false;
+                isCheck3Base = false;
+                isCheck4Base = false;
             } 
-            // else {
-            //     long chatId = update.message().chat().id();
-            //     SendMessage sendMessage = new SendMessage(chatId, "начните с команды /start");
-            //     telegramBot.execute(sendMessage);
-            // }
+            else if(update.message().text() != null && update.message().text().equals("/1base")) {
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя полную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnikMenu.menu());
+                isCheck1Base = true;
+            } else if(update.message().text() != null && update.message().text().equals("/2base")) {
+                isCheck2Base = true;
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя полную информацию о том, как надлежащим образом подготовиться ко встречи с питомцем. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", userConsultationMenu.menu());
+            } else if(update.message().text() != null && update.message().text().equals("/3base")) {
+                isCheck3Base = true;
+                sendMessageToTelegramBot(update, "привет друг, здесь ты можешь прислать информацию о состоянии питомца. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", keepengPet.menu());
+            } else if(update.message().text() != null && update.message().text().equals("/4base")) {
+                isCheck4Base = true;
+                String result = "Волонтер скоро вам ответит";
+                long chatId = update.message().chat().id();
+                telegramBot.execute(new SendMessage(chatId, result));
+                // здесь якобы данные чата волонетров
+                telegramBot.execute(new SendMessage("12345", "Волонтер тебя зовут"));
+            } 
+
             // submenu
-            subMenuItemsService.subMenuOfAboutPitomnik(update);
+            if(isCheck1Base) {
+                subMenuOfAboutPitomnik.subMenuOfAboutPitomnik(update);
+            } else if(isCheck2Base) {
+                subMenuOfUserConsultation.subMenuOfUserConsultation(update);
+            } else if(isCheck3Base) {
+                 
+                    try {
+                        subMenuKeepingPet.subMenuOfKeepingPet(update);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                
+            }
 
+            // если испытательный период закончен
+            if(new UserPitomnik().getPassedTest()) {
+                // заносим информацию об этом в базу данных 
+                userPitomnikRepository.save(
+                    new UserPitomnik(update.message().chat().id(), 
+                    new UserPitomnik().getCountPasses(), 
+                    new UserPitomnik().getPassedTest()));
+
+                    String result = "Волонтер, пользователь прошел испытательный период, загляни в базу!";
+                    // здесь якобы данные чата волонетров
+                    telegramBot.execute(new SendMessage("12345", result));
+
+            }
         });
-        
-
     return UpdatesListener.CONFIRMED_UPDATES_ALL;
     
-}
+    }
 }

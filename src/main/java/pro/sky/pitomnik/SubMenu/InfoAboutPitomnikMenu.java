@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import pro.sky.pitomnik.Interface.MenuForUser;
 
 @Component
-public class InfoAboutPitomnik implements MenuForUser {
+public class InfoAboutPitomnikMenu implements MenuForUser {
     
     @Override
     public String menu() {

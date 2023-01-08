@@ -1,6 +1,5 @@
 package pro.sky.pitomnik.Model;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,13 +9,14 @@ import lombok.Data;
 
 @Data
 @Entity
-public class UserOfPitomnik {
+public class ContactsUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String contactsOfUser;
+    private Long chatId;
+    private String contactsUser;
 
-    public UserOfPitomnik(String contactsOfUser) {
-        this.contactsOfUser = contactsOfUser;
+    public ContactsUser(String contactsUser) {
+        this.contactsUser = contactsUser;
     }
 }
