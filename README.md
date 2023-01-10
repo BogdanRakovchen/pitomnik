@@ -12,3 +12,5 @@
 |     1|   Java            |
 |     2|       Spring Boot        |
 |     3|       PostgresSQL        |
+|     4|       Spring Data JPA        |
+|     5|       Telegram-bot API        |
