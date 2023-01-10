@@ -18,6 +18,4 @@
 |     7|       Swagger-ui        |
 
 <bold>Схема базы данных</bold><br>
-
- 
-![Uploading contacts_user.png…]()
+[contacts_user.md](https://github.com/BogdanRakovchen/pitomnik/files/10384084/contacts_user.md)
