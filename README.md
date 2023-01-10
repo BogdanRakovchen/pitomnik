@@ -14,3 +14,6 @@
 |     3|       PostgresSQL        |
 |     4|       Spring Data JPA        |
 |     5|       Telegram-bot API        |
+|     6|       JavaDoc        |
+|     7|       Swagger-ui        |
+
