@@ -19,7 +19,8 @@
 
 <bold>Схема базы данных</bold><br>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="![diagram](https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png)">
-  <source media="(prefers-color-scheme: light)" srcset="![diagram](https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png)">
-  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="![diagram](https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png)">
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png">
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="https://user-images.githubusercontent.com/77485358/211593131-6fb6da48-d74d-4c1f-a9f8-bd97db829a87.png">
 </picture> 
+[diagram.md](https://github.com/BogdanRakovchen/pitomnik/files/10384113/diagram.md)
