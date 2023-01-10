@@ -13,9 +13,15 @@ public class UserPitomnik {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long chatId;
-    private Long countPasses = 0L;
+    private long id;
+    private long chatId;
+    /**
+     * количество пропусков по сдаче отчетов от пользователя
+    */
+    private long countPasses = 0L;
+    /**
+     * окончание периода испытания пользователем
+    */
     private Boolean passedTest = false;
 
     public UserPitomnik(Long chatId, Long countPasses, Boolean passedTest) {

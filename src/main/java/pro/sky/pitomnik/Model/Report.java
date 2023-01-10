@@ -16,6 +16,9 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long chatId;
+    /**
+     * отчет присланный от пользователя
+    */
     private byte[] reportAnimal;
     private String type; 
     private LocalDate date;

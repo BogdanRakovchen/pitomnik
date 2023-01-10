@@ -14,7 +14,15 @@ public class ContactsUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long chatId;
+    /**
+     * контактный номер пользователя
+    */
     private String contactsUser;
+
+    public ContactsUser(Long chatId, String contactsUser) {
+        this.chatId = chatId;
+        this.contactsUser = contactsUser;
+    }
 
     public ContactsUser(String contactsUser) {
         this.contactsUser = contactsUser;

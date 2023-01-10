@@ -10,9 +10,7 @@ import pro.sky.pitomnik.Model.Report;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long>{
- 
-    @Query(value = "SELECT date FROM report LIMIT 1 ", nativeQuery = true)
-    LocalDate getNextDate();
+
 
     @Query(value = "SELECT date FROM report LIMIT 1", nativeQuery = true)
     LocalDate getPrimaryDate();

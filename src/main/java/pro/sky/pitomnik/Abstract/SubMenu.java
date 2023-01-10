@@ -12,9 +12,9 @@ import com.pengrad.telegrambot.request.SendMessage;
 import pro.sky.pitomnik.Repository.ContactsUserRepository;
 
 abstract public class SubMenu {
-    protected Logger logger = LoggerFactory.getLogger(SubMenu.class);
-    protected TelegramBot telegramBot;
-    protected ContactsUserRepository contactsUserRepository;
+    protected final Logger logger = LoggerFactory.getLogger(SubMenu.class);
+    protected final TelegramBot telegramBot;
+    protected final ContactsUserRepository contactsUserRepository;
     protected static final Pattern PATTERN_OF_NUMBER_TELEPHONE = Pattern.compile("[0-9]+"); 
 
     public SubMenu(TelegramBot telegramBot, ContactsUserRepository contactsUserRepository) {

@@ -14,7 +14,7 @@ import pro.sky.pitomnik.Repository.ContactsUserRepository;
 @Service
 public class SubMenuOfAboutPitomnik extends SubMenu {
 
-    private InfoAboutPitomnikRepository infoAboutPitomnikRepository;
+    private final InfoAboutPitomnikRepository infoAboutPitomnikRepository;
     private boolean isItemFourSubWasCheck = false;
 
     public SubMenuOfAboutPitomnik(
@@ -26,6 +26,17 @@ public class SubMenuOfAboutPitomnik extends SubMenu {
         this.infoAboutPitomnikRepository = infoAboutPitomnikRepository;
     }
 
+
+    /**
+     * метод - обрабатывает запросы пользователя
+     * и выдает соответствующий результат:<br>
+     * 1. информация о питомнике<br>
+     * 2. адрес и расписание<br>
+     * 3. правила безопасности<br> 
+     * 4. запись номера телефона<br>
+     * 5. позвать волонтера<br>
+     * @param update
+    */
     public void subMenuOfAboutPitomnik(Update update) {
             if(update.message().text().equals("/1sub")) {
                 String result = "Инфа о питомнике: " + infoAboutPitomnikRepository.getAboutPitomnik();
@@ -46,7 +57,7 @@ public class SubMenuOfAboutPitomnik extends SubMenu {
                Boolean resultOfMatch = PATTERN_OF_NUMBER_TELEPHONE.matcher(update.message().text()).matches();
 
                if(resultOfMatch && update.message().text().trim().length() == 11) {
-                contactsUserRepository.save(new ContactsUser(update.message().text().trim()));
+                contactsUserRepository.save(new ContactsUser(update.message().chat().id(), update.message().text().trim()));
                     logger.info("write phonenumber");
                     String result = "Спасибо, ваш номер телефона записан";
                     sendMessageToTelegramBot(update, result);

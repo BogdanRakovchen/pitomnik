@@ -27,11 +27,11 @@ import pro.sky.pitomnik.Repository.ReportRepository;
 @Service
 public class SubMenuKeepingPet {
 
-    Logger logger = LoggerFactory.getLogger(SubMenuKeepingPet.class);
+   private final Logger logger = LoggerFactory.getLogger(SubMenuKeepingPet.class);
 
-    private TelegramBot telegramBot;
-    private ReportRepository reportRepository;
-    private ImageAnimalRepository imageAnimalRepository;
+    private final TelegramBot telegramBot;
+    private final ReportRepository reportRepository;
+    private final ImageAnimalRepository imageAnimalRepository;
 
     public SubMenuKeepingPet(
         TelegramBot telegramBot, 
@@ -42,11 +42,21 @@ public class SubMenuKeepingPet {
         this.imageAnimalRepository = imageAnimalRepository;
     }
 
+    /**
+     * общий метод, который высчитывает id пользователя и отправляет 
+     * ему сообщения 
+    */
     private void sendMessageToTelegramBot(Update update, String result ) {
         long chatId = update.message().chat().id();
         telegramBot.execute(new SendMessage(chatId, result)); 
     }
 
+    /**
+     * метод - загружает с компьютера файл (отчет)
+     * и отправляет его пользователю чата для скачивания 
+     * @param update
+     * @throws IOException
+    */
     private void loadReportForUser(Update update) throws IOException {
     
         File file = new File("src/main/resources/static/report", "report.odt");
@@ -62,6 +72,15 @@ public class SubMenuKeepingPet {
         } 
     }
 
+    /**
+     * метод - обрабатывает запросы пользователя и выдает 
+     * соответствующий результат:<br>
+     * 1. скачать файл (отчет) для заполнения<br>
+     * 2. загрузить заполненный отчет и фотографию животного<br>
+     * 3. позвать волонтера на помощь<br> 
+     * @param update
+     * @throws IOException
+    */
     public void subMenuOfKeepingPet(Update update) throws IOException {
          if(update.message().text() != null && update.message().text().equals("/1sub")) {
             loadReportForUser(update);

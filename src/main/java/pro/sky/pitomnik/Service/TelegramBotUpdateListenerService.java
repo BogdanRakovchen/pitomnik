@@ -18,6 +18,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 
+import pro.sky.pitomnik.Constants.Menu;
 import pro.sky.pitomnik.Interface.MenuForUser;
 import pro.sky.pitomnik.Model.UserPitomnik;
 import pro.sky.pitomnik.Repository.UserPitomnikRepository;
@@ -29,14 +30,14 @@ import pro.sky.pitomnik.SubMenu.UserConsultationMenu;
 public class TelegramBotUpdateListenerService implements UpdatesListener, MenuForUser {
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListenerService.class);
     
-    private TelegramBot telegramBot;
-    private InfoAboutPitomnikMenu infoAboutPitomnikMenu;
-    private SubMenuOfAboutPitomnik subMenuOfAboutPitomnik;
-    private UserConsultationMenu userConsultationMenu;
-    private SubMenuOfUserConsultation subMenuOfUserConsultation;
-    private SubMenuKeepingPet subMenuKeepingPet;
-    private KeepengPet keepengPet;
-    private UserPitomnikRepository userPitomnikRepository;
+    private final TelegramBot telegramBot;
+    private final InfoAboutPitomnikMenu infoAboutPitomnikMenu;
+    private final SubMenuOfAboutPitomnik subMenuOfAboutPitomnik;
+    private final UserConsultationMenu userConsultationMenu;
+    private final SubMenuOfUserConsultation subMenuOfUserConsultation;
+    private final SubMenuKeepingPet subMenuKeepingPet;
+    private final KeepengPet keepengPet;
+    private final UserPitomnikRepository userPitomnikRepository;
     private boolean isCheckOfCommandStart = false;
     private boolean isCheck1Base = false;
     private boolean isCheck2Base = false;
@@ -92,12 +93,21 @@ public class TelegramBotUpdateListenerService implements UpdatesListener, MenuFo
         return stringBuilder.toString();
     }
 
+    /**
+     * метод - вычисляет id пользователя и дает обратную связь
+     * @param update
+     * @param welcomeUserMessage - приветственное сообщение для пользователя
+     * @param menu
+    */
     private void sendMessageToTelegramBot(Update update, String welcomeUserMessage, String menu) {
         long chatId = update.message().chat().id();
         String result = welcomeUserMessage + "\n" + menu;
         telegramBot.execute(new SendMessage(chatId, result)); 
     }
     
+    /**
+     * метод - основной, для обработки все запросов пользователя чат-бота
+    */
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
@@ -111,23 +121,23 @@ public class TelegramBotUpdateListenerService implements UpdatesListener, MenuFo
                 isCheck3Base = false;
                 isCheck4Base = false;
             } 
-            else if(update.message().text() != null && update.message().text().equals("/1base")) {
+            else if(update.message().text() != null && update.message().text().equals(Menu.ONE_BASE)) {
                 sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя полную информацию о приюте. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", infoAboutPitomnikMenu.menu());
                 isCheck1Base = true;
-            } else if(update.message().text() != null && update.message().text().equals("/2base")) {
+            } else if(update.message().text() != null && update.message().text().equals(Menu.TWO_BASE)) {
                 isCheck2Base = true;
                 sendMessageToTelegramBot(update, "привет друг, здесь ты можешь узнать для себя полную информацию о том, как надлежащим образом подготовиться ко встречи с питомцем. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", userConsultationMenu.menu());
-            } else if(update.message().text() != null && update.message().text().equals("/3base")) {
+            } else if(update.message().text() != null && update.message().text().equals(Menu.THREE_BASE)) {
                 isCheck3Base = true;
                 sendMessageToTelegramBot(update, "привет друг, здесь ты можешь прислать информацию о состоянии питомца. При выборе в этом меню, прописывай пункты по типу /1sub, /2sub и т.д.", keepengPet.menu());
-            } else if(update.message().text() != null && update.message().text().equals("/4base")) {
+            } else if(update.message().text() != null && update.message().text().equals(Menu.FOUR_BASE)) {
                 isCheck4Base = true;
                 String result = "Волонтер скоро вам ответит";
                 long chatId = update.message().chat().id();
                 telegramBot.execute(new SendMessage(chatId, result));
                 // здесь якобы данные чата волонетров
                 telegramBot.execute(new SendMessage("12345", "Волонтер тебя зовут"));
-            } 
+     } 
 
             // submenu
             if(isCheck1Base) {

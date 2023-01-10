@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import pro.sky.pitomnik.Abstract.SubMenu;
+import pro.sky.pitomnik.Constants.Menu;
 import pro.sky.pitomnik.Model.ContactsUser;
 import pro.sky.pitomnik.Repository.UserConsultationRepository;
 import pro.sky.pitomnik.Repository.ContactsUserRepository;
@@ -14,7 +15,7 @@ import pro.sky.pitomnik.Repository.ContactsUserRepository;
 @Service
 public class SubMenuOfUserConsultation extends SubMenu {
 
-    private UserConsultationRepository userConsultationRepository;
+    private final UserConsultationRepository userConsultationRepository;
     private Boolean isItemFourSubWasCheck = false;
 
     public SubMenuOfUserConsultation(
@@ -26,36 +27,39 @@ public class SubMenuOfUserConsultation extends SubMenu {
         this.userConsultationRepository = userConsultationRepository;
     }
     
-
+    /**
+     * метод - обрабатывает запросы пользователя 
+     * @param update
+    */
     public void subMenuOfUserConsultation(Update update) {
-        if(update.message().text().equals("/1sub")) {
+        if(update.message().text().equals(Menu.ONE_SUB)) {
             String result = "правила знакомства: " + userConsultationRepository.getDogDatingRules();
             sendMessageToTelegramBot(update, result);
-        } else if(update.message().text().equals("/2sub")) {
+        } else if(update.message().text().equals(Menu.TWO_SUB)) {
             String result = "список документов: " + userConsultationRepository.getListOfDocuments();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/3sub")) {
+        } else if(update.message().text().equals(Menu.THREE_SUB)) {
             String result = "список рекомендаций: " + userConsultationRepository.getShippingRecommendationList();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/4sub")) {
+        } else if(update.message().text().equals(Menu.FOUR_SUB)) {
             String result = "список рекомендаций: " + userConsultationRepository.getHomeImprovementListForPuppy();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/5sub")) {
+        } else if(update.message().text().equals(Menu.FIVE_SUB)) {
             String result = "список рекомендаций: " + userConsultationRepository.getHomeImprovementListForAdultDog();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/6sub")) {
+        } else if(update.message().text().equals(Menu.SIX_SUB)) {
             String result = "список рекомендаций: " + userConsultationRepository.getHomeImprovementListForDogWithDisabilities();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/7sub")) {
+        } else if(update.message().text().equals(Menu.SEVEN_SUB)) {
             String result = "советы кинолога: " + userConsultationRepository.getCynologistAdvice();
             sendMessageToTelegramBot(update, result);   
-        }  else if(update.message().text().equals("/8sub")) {
+        }  else if(update.message().text().equals(Menu.EIGHT_SUB)) {
             String result = "рекомендации по проверенным кинологам: " + userConsultationRepository.getRecommendationsProvenCynologists();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/9sub")) {
+        } else if(update.message().text().equals(Menu.NINE_SUB)) {
             String result = "список причин для отказа: " + userConsultationRepository.getListReasonsOfRefusal();
             sendMessageToTelegramBot(update, result);   
-        } else if(update.message().text().equals("/10sub")) {
+        } else if(update.message().text().equals(Menu.TEN_SUB)) {
             String result = "Введите номер телефона, в формате 89991112325";
             sendMessageToTelegramBot(update, result);
             isItemFourSubWasCheck = true;
@@ -73,7 +77,7 @@ public class SubMenuOfUserConsultation extends SubMenu {
                     }
                 
 
-        } else if(update.message().text().equals("/11sub")) {
+        } else if(update.message().text().equals(Menu.ELEVEN_SUB)) {
             String result = "Волонтер скоро вам ответит";
             // здесь якобы данные чата волонетров
             long chatId = update.message().chat().id();

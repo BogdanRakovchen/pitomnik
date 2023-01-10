@@ -14,6 +14,9 @@ public class ImageAnimal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long chatId;
+    /**
+     * изображение животного от пользователя
+    */
     private byte[] imageAnimal;
     private String type;
 
