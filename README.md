@@ -18,7 +18,6 @@
 |     7|       Swagger-ui        |
 
 <bold>Схема базы данных</bold><br>
-<picture>
- <img alt="Схема" src="/home/contacts_user.png">
-</picture>
+
  
+![Uploading contacts_user.png…]()
