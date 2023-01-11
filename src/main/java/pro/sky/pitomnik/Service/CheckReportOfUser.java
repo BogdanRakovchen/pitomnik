@@ -22,7 +22,7 @@ public class CheckReportOfUser {
 
     private final Logger logger = LoggerFactory.getLogger(CheckReportOfUser.class);
     
-    // @Scheduled(fixedDelay = 86400)
+    @Scheduled(fixedDelay = 86400)
     /**
      * метод - высчитывает начальную дату обращения пользователя в приют и конечную дату
      * окончания периода испытания 

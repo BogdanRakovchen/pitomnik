@@ -46,7 +46,7 @@ public class SubMenuKeepingPet {
      * общий метод, который высчитывает id пользователя и отправляет 
      * ему сообщения 
     */
-    private void sendMessageToTelegramBot(Update update, String result ) {
+    private void sendMessageToTelegramBot(Update update, String result) {
         long chatId = update.message().chat().id();
         telegramBot.execute(new SendMessage(chatId, result)); 
     }
