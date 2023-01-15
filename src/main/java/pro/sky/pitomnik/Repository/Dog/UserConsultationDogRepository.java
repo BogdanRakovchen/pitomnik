@@ -1,13 +1,13 @@
-package pro.sky.pitomnik.Repository;
+package pro.sky.pitomnik.Repository.Dog;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import pro.sky.pitomnik.Model.UserConsultation;
+import pro.sky.pitomnik.Model.Dog.UserConsultationDog;
 
 @Repository
-public interface UserConsultationRepository extends JpaRepository<UserConsultation, Long>{
+public interface UserConsultationDogRepository extends JpaRepository<UserConsultationDog, Long>{
     
     @Query(value = "SELECT dog_dating_rules FROM user_consultation", nativeQuery = true)
     String getDogDatingRules();

@@ -1,4 +1,4 @@
-package pro.sky.pitomnik.Service;
+package pro.sky.pitomnik.Service.Dog;
 
 import org.springframework.stereotype.Service;
 
@@ -9,19 +9,19 @@ import com.pengrad.telegrambot.request.SendMessage;
 import pro.sky.pitomnik.Abstract.SubMenu;
 import pro.sky.pitomnik.Constants.Menu;
 import pro.sky.pitomnik.Model.ContactsUser;
-import pro.sky.pitomnik.Repository.UserConsultationRepository;
 import pro.sky.pitomnik.Repository.ContactsUserRepository;
+import pro.sky.pitomnik.Repository.Dog.UserConsultationDogRepository;
 
 @Service
 public class SubMenuOfUserConsultation extends SubMenu {
 
-    private final UserConsultationRepository userConsultationRepository;
+    private final UserConsultationDogRepository userConsultationRepository;
     private Boolean isItemFourSubWasCheck = false;
 
     public SubMenuOfUserConsultation(
         TelegramBot telegramBot,
         ContactsUserRepository contactsUserRepository,
-        UserConsultationRepository userConsultationRepository
+        UserConsultationDogRepository userConsultationRepository
         ) {
         super(telegramBot, contactsUserRepository);    
         this.userConsultationRepository = userConsultationRepository;

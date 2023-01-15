@@ -1,4 +1,8 @@
 package pro.sky.pitomnik.Constants;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 /** 
  * константы команд чат-бота 
 */
@@ -18,5 +22,9 @@ public class Menu {
     public static final String NINE_SUB = "/9sub";
     public static final String TEN_SUB = "/10sub";
     public static final String ELEVEN_SUB = "/11sub";
+
+    public static boolean isDog = false;
+    public static boolean isCat = false;
+   
 
 }

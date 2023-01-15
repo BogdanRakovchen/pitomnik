@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import pro.sky.pitomnik.Model.ContactsUser;
-import pro.sky.pitomnik.Model.ImageAnimal;
 import pro.sky.pitomnik.Model.Report;
+import pro.sky.pitomnik.Model.Dog.ImageDog;
 import pro.sky.pitomnik.Repository.ContactsUserRepository;
 
 @RestController
@@ -65,7 +65,7 @@ public class PitomnikController {
                 method = "get",
                 description = "получение данных id, chat_id, тип файла и изображение животного",
                 parameters = {
-                    @Parameter(schema = @Schema(implementation = ImageAnimal.class))
+                    @Parameter(schema = @Schema(implementation = ImageDog.class))
                 },
                 responses = {
                     @ApiResponse(responseCode = "200", description = "запрос выполнен успешно"),

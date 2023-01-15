@@ -1,18 +1,10 @@
-package pro.sky.pitomnik.Model;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+package pro.sky.pitomnik.Abstract;
 
 import lombok.Data;
 
 @Data
-@Entity
-public class UserConsultation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+abstract public class UserConsultation {
+ 
     private String dogDatingRules;
     private String listOfDocuments;
     private String shippingRecommendationList;
@@ -22,5 +14,4 @@ public class UserConsultation {
     private String cynologistAdvice;
     private String recommendationsProvenCynologists;
     private String listReasonsOfRefusal;
-    
 }

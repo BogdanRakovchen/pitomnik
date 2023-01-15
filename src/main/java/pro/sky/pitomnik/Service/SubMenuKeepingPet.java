@@ -19,10 +19,13 @@ import com.pengrad.telegrambot.request.SendDocument;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 
-import pro.sky.pitomnik.Model.ImageAnimal;
+import pro.sky.pitomnik.Constants.Menu;
 import pro.sky.pitomnik.Model.Report;
-import pro.sky.pitomnik.Repository.ImageAnimalRepository;
+import pro.sky.pitomnik.Model.Cat.ImageCat;
+import pro.sky.pitomnik.Model.Dog.ImageDog;
 import pro.sky.pitomnik.Repository.ReportRepository;
+import pro.sky.pitomnik.Repository.Cat.ImageCatRepository;
+import pro.sky.pitomnik.Repository.Dog.ImageDogRepository;
 
 @Service
 public class SubMenuKeepingPet {
@@ -31,15 +34,19 @@ public class SubMenuKeepingPet {
 
     private final TelegramBot telegramBot;
     private final ReportRepository reportRepository;
-    private final ImageAnimalRepository imageAnimalRepository;
+    private final ImageDogRepository imageDogRepository;
+    private final ImageCatRepository imageCatRepository;
+   
 
     public SubMenuKeepingPet(
         TelegramBot telegramBot, 
         ReportRepository reportRepository,
-        ImageAnimalRepository imageAnimalRepository) {
+        ImageDogRepository imageDogRepository,
+        ImageCatRepository imageCatRepository) {
         this.telegramBot = telegramBot;
         this.reportRepository = reportRepository;
-        this.imageAnimalRepository = imageAnimalRepository;
+        this.imageDogRepository = imageDogRepository;
+        this.imageCatRepository = imageCatRepository;
     }
 
     /**
@@ -93,7 +100,9 @@ public class SubMenuKeepingPet {
 
             try {    
                byte[] fileContent = telegramBot.getFileContent(getFileResponse.file());
-               reportRepository.save(new Report(chatId, fileContent, getFileRequest.getContentType(), LocalDate.now()));
+              
+                reportRepository.save(new Report(chatId, fileContent, getFileRequest.getContentType(), LocalDate.now()));
+              
                 } catch (IOException e) {
                  logger.info(e + "");
             }
@@ -106,7 +115,11 @@ public class SubMenuKeepingPet {
             GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
             try {    
                 byte[] fileContent = telegramBot.getFileContent(getFileResponse.file());
-                imageAnimalRepository.save(new ImageAnimal(chatId, fileContent, getFileRequest.getContentType()));
+                if(Menu.isDog) {
+                    imageDogRepository.save(new ImageDog(chatId, fileContent, getFileRequest.getContentType()));
+                } else if(Menu.isCat) {
+                    imageCatRepository.save(new ImageCat(chatId, fileContent, getFileRequest.getContentType()));   
+                }
                 } catch (IOException e) {
                  logger.info(e + "");
             }
